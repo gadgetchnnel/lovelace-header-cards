@@ -4,6 +4,17 @@ Allows you to add badges and cards to the header in [Home Assistant](https://www
 
 ![image](https://user-images.githubusercontent.com/2099542/156801065-cee10322-dbf6-4347-bb76-90d7e4c2c590.png)
 
+## Installation
+
+You can install this manually or via [HACS](https://github.com/custom-components/hacs) if you want easy updating,
+
+### Manually
+* Download the **lovelace-header-cards.js** file and place it in your `www` folder.
+* Add the file as a resource
+
+### With HACS
+Add this as a custom repository in HACs, search for "Header Cards" in the store and follow the instructions.
+
 ## Config Options
 
 | Config Option | Type | Description |
