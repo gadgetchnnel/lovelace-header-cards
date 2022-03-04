@@ -1,5 +1,3 @@
-import {lovelace} from "card-tools/src/hass";
-import { applyThemesOnElement } from 'custom-card-helpers';
 import { dashboardObserver, toolbarObserver, panelObserver } from './observers.js';
 import { getLovelace } from './helpers.js';
 
