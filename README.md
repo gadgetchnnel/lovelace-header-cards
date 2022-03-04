@@ -2,7 +2,7 @@
 
 Allows you to add badges and cards to the header in [Home Assistant](https://www.home-assistant.io/)
 
-![image](https://user-images.githubusercontent.com/2099542/156801065-cee10322-dbf6-4347-bb76-90d7e4c2c590.png)
+<img width="298" alt="image" src="https://user-images.githubusercontent.com/2099542/156809984-2bb15473-cfc4-4159-9a11-2595f001915e.png">
 
 ## Installation
 
