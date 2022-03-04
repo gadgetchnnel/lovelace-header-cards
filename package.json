@@ -1,0 +1,22 @@
+{
+  "name": "lovelace-header-cards",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Header Cards",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch --mode=development"
+  },
+  "author": "Steven Rollason",
+  "license": "MIT",
+  "devDependencies": {
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.12"
+  },
+  "main": "webpack.config.js",
+  "dependencies": {
+    "card-tools": "github:thomasloven/lovelace-card-tools",
+    "custom-card-helpers": "^1.9.0"
+  },
+  "keywords": []
+}
