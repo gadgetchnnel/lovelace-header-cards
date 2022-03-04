@@ -14,6 +14,8 @@
     "webpack-cli": "^3.3.12"
   },
   "main": "webpack.config.js",
-  "dependencies": {},
+  "dependencies": {
+    "watchpack": "^2.3.1"
+  },
   "keywords": []
 }
