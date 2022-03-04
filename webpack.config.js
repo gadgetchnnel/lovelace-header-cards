@@ -5,7 +5,7 @@ module.exports = {
   mode: 'production',
   devtool: false,
   output: {
-    filename: 'lovelace-header-cards.js',
+    filename: 'dist/lovelace-header-cards.js',
     path: path.resolve(__dirname)
   }
 };
