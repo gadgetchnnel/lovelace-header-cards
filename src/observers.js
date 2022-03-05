@@ -1,5 +1,5 @@
 export function dashboardObserver(main, callback){
-	new MutationObserver(function(mutations) {
+	return new MutationObserver(function(mutations) {
     	mutations.forEach(({ addedNodes }) => {
       		for (let node of addedNodes) {
       			if (node.localName == "ha-panel-lovelace") {
@@ -15,7 +15,7 @@ export function dashboardObserver(main, callback){
 }
 
 export function toolbarObserver(header, callback){
- 	new MutationObserver(function(mutations) {
+ 	return new MutationObserver(function(mutations) {
     	mutations.forEach(({ addedNodes }) => {
       		for (let node of addedNodes) {
       			if(node.localName == "app-toolbar" && node.className != "edit-mode"){
@@ -31,7 +31,7 @@ export function toolbarObserver(header, callback){
  }
  
  export function panelObserver(panel, callback){
- 	new MutationObserver(function(mutations) {
+ 	return new MutationObserver(function(mutations) {
     	mutations.forEach(({ addedNodes }) => {
       		for (let node of addedNodes) {
       			if(node.localName == "hui-root"){

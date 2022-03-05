@@ -7,20 +7,36 @@ class HeaderCards {
 	constructor(){
 		this.addCardsToHeader(getLovelace(this.panel));
 		this.entityWatch();
-    	
+		
     	dashboardObserver(this.main, (node) => {
     		window.HeaderCards.addCardsToHeader(getLovelace(node));
+    		
+    		if(this.toolbar && !this.toolbarObserver){
+    			this.setupToolbarObserver();
+    		}
+    		
+    		if(this.panel && !this.panelObserver){
+    			this.setupPanelObserver();
+    		}
     	});
     	
-    	this.setupToolbarObserver();
+    	if(this.header){
+    		this.setupToolbarObserver();
+    	}
     	
-    	panelObserver(this.panel, () => { this.setupToolbarObserver(); });
+    	if(this.panel){
+    		this.setupPanelObserver();
+    	}
  	}
  	
  	setupToolbarObserver(){
- 		toolbarObserver(this.header, () => {
+ 		this.toolbarObserver = toolbarObserver(this.header, () => {
     		window.HeaderCards.addCardsToHeader(getLovelace(this.panel));
     	});
+ 	}
+ 	
+ 	setupPanelObserver(){
+ 		this.panelObserver = panelObserver(this.panel, () => { this.setupToolbarObserver(); });
  	}
  	
  	get main(){
@@ -143,6 +159,7 @@ class HeaderCards {
     		let headerCardsConfig = config.header_cards || {};
     		
     		let cards = headerCardsConfig.cards || [];
+    		let badges = headerCardsConfig.badges || [];
     		
     		let tabs = this.toolbar && this.toolbar.querySelector("ha-tabs");
     		
@@ -152,36 +169,37 @@ class HeaderCards {
     		let oldBadges = this.toolbar.querySelector("#headerBadges");
     		if(oldBadges) oldBadges.remove();
     		
-    		if(cards && cards.length){
-    			let div = document.createElement("div");
-    			div.id = "headerCards";
-    			div.style.width = "auto";
-    			div.style.minWidth = "max-content";
-    			div.style.fontFamily = "var(--paper-font-body1_-_font-family)"
-    			div.style["-webkit-font-smoothing"] = "var(--paper-font-body1_-_-webkit-font-smoothing)";
-    			div.style.fontSize = "var(--paper-font-body1_-_font-size)";
-    			div.style.fontWeight =  "var(--paper-font-body1_-_font-weight)";
-    			div.style.lineHeight = "var(--paper-font-body1_-_line-height)";
+    		if(cards.length > 0 || badges.length > 0){	
+				if(cards.length > 0){
+    				let div = document.createElement("div");
+    				div.id = "headerCards";
+    				div.style.width = "auto";
+    				div.style.minWidth = "max-content";
+    				div.style.fontFamily = "var(--paper-font-body1_-_font-family)"
+    				div.style["-webkit-font-smoothing"] = "var(--paper-font-body1_-_-webkit-font-smoothing)";
+    				div.style.fontSize = "var(--paper-font-body1_-_font-size)";
+    				div.style.fontWeight =  "var(--paper-font-body1_-_font-weight)";
+    				div.style.lineHeight = "var(--paper-font-body1_-_line-height)";
+    				
+    				cards.forEach(cardConfig => {
+    					this.addCardWhenDefined(cardConfig, div);	
+    				});
+    				div.style.marginRight = "auto";
+    				this.insertAfter(div, tabs);
+    			}
     			
-    			cards.forEach(cardConfig => {
-    				this.addCardWhenDefined(cardConfig, div);	
-    			});
-    			this.insertAfter(div, tabs);
+    			if(badges.length > 0){
+    				let div = document.createElement("div");
+    				div.id = "headerBadges";
+    				div.style.width = "auto";
+    				div.style.minWidth = "max-content";
+    				badges.forEach(badgeConfig => {
+    					this.addBadge(badgeConfig, div);	
+    				});
+    				if(cards.length == 0) div.style.marginRight = "auto";
+    				this.insertAfter(div, tabs);    			
+    			}
     		}
-    		
-    		let badges = headerCardsConfig.badges || [];
-    		
-    		if(badges && badges.length){
-    			let div = document.createElement("div");
-    			div.id = "headerBadges";
-    			div.style.width = "auto";
-    			div.style.minWidth = "max-content";
-    			badges.forEach(badgeConfig => {
-    				this.addBadge(badgeConfig, div);	
-    			});
-    			this.insertAfter(div, tabs);
-    		}
-    		
     	});
 	}
 }
