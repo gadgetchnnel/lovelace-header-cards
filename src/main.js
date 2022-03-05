@@ -71,9 +71,14 @@ class HeaderCards {
   	}
 
   	entityWatchCallback(event) {
-    	if (event.event_type == "state_changed" && 
-        	(!event.data.old_state ||  event.data.new_state.state != event.data.old_state.state)) {
-      		this.applyHass();
+    	if (event.event_type == "state_changed")
+    	{ 
+    		let old_state = event.data.old_state && event.data.old_state.state;
+    		let new_state = event.data.new_state && event.data.new_state.state;
+        	if(new_state != old_state)
+        	{
+      			this.applyHass();
+      		}
     	}
   	}
   
