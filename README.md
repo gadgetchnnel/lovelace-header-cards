@@ -13,7 +13,7 @@ You can install this manually or via [HACS](https://github.com/custom-components
 * Add the file as a resource
 
 ### With HACS
-Add this as a custom repository in HACs, search for "Header Cards" in the store and follow the instructions.
+Search for "Header Cards" in the Frontend section of HACS and follow the instructions.
 
 ## Config Options
 
