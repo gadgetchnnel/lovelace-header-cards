@@ -172,7 +172,28 @@ class HeaderCards {
     		let oldBadges = this.toolbar.querySelector("#headerBadges");
     		if(oldBadges) oldBadges.remove();
     		
-    		if(cards.length > 0 || badges.length > 0){	
+    		if(cards.length > 0 || badges.length > 0){
+    			let outerDiv =  document.createElement("div");
+    			outerDiv.style.display = "flex";
+    			outerDiv.style["-ms-flex-direction"] = "row";
+    			outerDiv.style["-webkit-flex-direction"] = "row";
+    			outerDiv.style["flex-direction"] = "row";
+    			outerDiv.style["-ms-flex-align"] = "center";
+    			outerDiv.style["-webkit-align-items"] = "center";
+    			outerDiv.style["align-items"] = "center";
+    			
+    			if(badges.length > 0){
+    				let div = document.createElement("div");
+    				div.id = "headerBadges";
+    				div.style.width = "auto";
+    				div.style.minWidth = "max-content";
+    				badges.forEach(badgeConfig => {
+    					this.addBadge(badgeConfig, div);	
+    				});
+    				
+    				outerDiv.appendChild(div); 			
+    			}
+    			
 				if(cards.length > 0){
     				let div = document.createElement("div");
     				div.id = "headerCards";
@@ -187,35 +208,20 @@ class HeaderCards {
     				cards.forEach(cardConfig => {
     					this.addCardWhenDefined(cardConfig, div);	
     				});
-    				div.style.marginRight = "auto";
-    				if(button) {
-    					this.toolbar.insertBefore(div, button);
-    				}
-    				else{
-    					this.toolbar.appendChild(div);
-    				}
+    				
+    				outerDiv.appendChild(div);
     			}
     			
-    			if(badges.length > 0){
-    				let div = document.createElement("div");
-    				div.id = "headerBadges";
-    				div.style.width = "auto";
-    				div.style.minWidth = "max-content";
-    				badges.forEach(badgeConfig => {
-    					this.addBadge(badgeConfig, div);	
-    				});
-    				if(cards.length == 0) div.style.marginRight = "auto";
-    				if(button) {
-    					this.toolbar.insertBefore(div, button);
-    				}
-    				else{
-    					this.toolbar.appendChild(div);
-    				}   			
+    			if(button) {
+    					this.toolbar.insertBefore(outerDiv, button);
     			}
+    			else{
+    				this.toolbar.appendChild(outerDiv);
+    			}  
     			
     			if(tabs && replaceTabs){
     		   		tabs.style.display = "none";
-    			}
+    		   	}
     		}
     	});
 	}
