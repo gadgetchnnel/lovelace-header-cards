@@ -17,10 +17,11 @@ Add this as a custom repository in HACs, search for "Header Cards" in the store 
 
 ## Config Options
 
-| Config Option | Type | Description |
-|:---------------|:---------------|:----------|
-|`badges:`| List | List of badges to add to header
-|`cards:` | List | List of cards to add to header |
+| Config Option  | Type | Default | Description |
+|:---------------|:---------------|:---------------|:----------|
+|`replace_tabs:`| Boolean | false | Hides the tabs in the header (e.g. if you have created custom navigation buttons) |
+|`badges:`| List |  | List of badges to add to header
+|`cards:` | List |  | List of cards to add to header |
 
 ## Simple config example
 

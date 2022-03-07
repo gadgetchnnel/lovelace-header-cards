@@ -161,7 +161,10 @@ class HeaderCards {
     		let cards = headerCardsConfig.cards || [];
     		let badges = headerCardsConfig.badges || [];
     		
+    		let replaceTabs = (headerCardsConfig && headerCardsConfig.replace_tabs) || false;
+    		
     		let tabs = this.toolbar && this.toolbar.querySelector("ha-tabs");
+    		let button = this.toolbar && this.toolbar.querySelector("ha-icon-button, ha-button-menu");
     		
     		let oldCards = this.toolbar.querySelector("#headerCards");
     		if(oldCards) oldCards.remove();	
@@ -185,7 +188,12 @@ class HeaderCards {
     					this.addCardWhenDefined(cardConfig, div);	
     				});
     				div.style.marginRight = "auto";
-    				this.insertAfter(div, tabs);
+    				if(button) {
+    					this.toolbar.insertBefore(div, button);
+    				}
+    				else{
+    					this.toolbar.appendChild(div);
+    				}
     			}
     			
     			if(badges.length > 0){
@@ -197,7 +205,16 @@ class HeaderCards {
     					this.addBadge(badgeConfig, div);	
     				});
     				if(cards.length == 0) div.style.marginRight = "auto";
-    				this.insertAfter(div, tabs);    			
+    				if(button) {
+    					this.toolbar.insertBefore(div, button);
+    				}
+    				else{
+    					this.toolbar.appendChild(div);
+    				}   			
+    			}
+    			
+    			if(tabs && replaceTabs){
+    		   		tabs.style.display = "none";
     			}
     		}
     	});
