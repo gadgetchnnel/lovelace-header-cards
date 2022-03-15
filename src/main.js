@@ -101,9 +101,9 @@ class HeaderCards {
 	addCard(cardConfig, element) {
 		let tag = cardConfig.type;
 		let card = this.createCardElement(cardConfig);
-			card.style.display = "inline-block";
-			card.hass = this.hass;
-			element.appendChild(card);
+		card.style.display = "inline-block";
+		card.hass = this.hass;
+		element.appendChild(card);
 	}
 	
 	addCardWhenDefined(cardConfig, element) {
@@ -164,51 +164,48 @@ class HeaderCards {
     		let replaceTabs = (headerCardsConfig && headerCardsConfig.replace_tabs) || false;
     		
     		let tabs = this.toolbar && this.toolbar.querySelector("ha-tabs");
+    		let mainTitle = this.toolbar && this.toolbar.querySelector("div[main-title]");
     		let button = this.toolbar && this.toolbar.querySelector("ha-icon-button, ha-button-menu");
     		
-    		let oldCards = this.toolbar.querySelector("#headerCards");
-    		if(oldCards) oldCards.remove();	
+    		let oldHeaderCards = this.toolbar.querySelector("#headerCards");
+    		if(oldHeaderCards) oldHeaderCards.remove();	
     		
-    		let oldBadges = this.toolbar.querySelector("#headerBadges");
-    		if(oldBadges) oldBadges.remove();
+    		let justify_content = headerCardsConfig.justify_content || "right";
     		
     		if(cards.length > 0 || badges.length > 0){
     			let outerDiv =  document.createElement("div");
+    			outerDiv.id = "headerCards";
     			outerDiv.style.display = "flex";
+    			outerDiv.style.visibility = "hidden";
     			outerDiv.style["-ms-flex-direction"] = "row";
     			outerDiv.style["-webkit-flex-direction"] = "row";
     			outerDiv.style["flex-direction"] = "row";
+    			
     			outerDiv.style["-ms-flex-align"] = "center";
     			outerDiv.style["-webkit-align-items"] = "center";
     			outerDiv.style["align-items"] = "center";
     			
+    			outerDiv.style["justify-content"] = justify_content;
+    			
+    			outerDiv.style["flex"] = "1";
+    			
     			if(badges.length > 0){
     				let div = document.createElement("div");
-    				div.id = "headerBadges";
     				div.style.width = "auto";
     				div.style.minWidth = "max-content";
     				badges.forEach(badgeConfig => {
     					this.addBadge(badgeConfig, div);	
     				});
-    				
-    				outerDiv.appendChild(div); 			
+    				outerDiv.appendChild(div);	
     			}
     			
 				if(cards.length > 0){
-    				let div = document.createElement("div");
-    				div.id = "headerCards";
-    				div.style.width = "auto";
+					let div = document.createElement("div");
+					div.style.width = "auto";
     				div.style.minWidth = "max-content";
-    				div.style.fontFamily = "var(--paper-font-body1_-_font-family)"
-    				div.style["-webkit-font-smoothing"] = "var(--paper-font-body1_-_-webkit-font-smoothing)";
-    				div.style.fontSize = "var(--paper-font-body1_-_font-size)";
-    				div.style.fontWeight =  "var(--paper-font-body1_-_font-weight)";
-    				div.style.lineHeight = "var(--paper-font-body1_-_line-height)";
-    				
     				cards.forEach(cardConfig => {
     					this.addCardWhenDefined(cardConfig, div);	
     				});
-    				
     				outerDiv.appendChild(div);
     			}
     			
@@ -219,9 +216,36 @@ class HeaderCards {
     				this.toolbar.appendChild(outerDiv);
     			}  
     			
-    			if(tabs && replaceTabs){
-    		   		tabs.style.display = "none";
-    		   	}
+    			if(tabs || mainTitle){
+    				if(replaceTabs){
+    					(tabs || mainTitle).style.display = "none";
+    		   			outerDiv.style.display = "flex";
+    		   		}
+    		   		else{
+    		   			//outerDiv.style.visibility = "visible";
+    		   			
+    		   		   setTimeout(function(){
+    		   				if(tabs){
+    		   					let tabsContent = tabs.shadowRoot && tabs.shadowRoot.querySelector("#tabsContent");
+    		   			    		tabsContent.style.setProperty('width', 'auto', 'important');
+    		   						let width = tabsContent.offsetWidth;
+    		   						console.log("Tabs Width", width);
+    		   						tabs.style.width = `${width}px`;
+    		   						tabs.style.paddingRight = "10px";
+    		   						outerDiv.style.visibility = "visible";
+    		   				}
+    		   				else{
+    		   					mainTitle.style.flex = "0";
+    		   					mainTitle.style.paddingRight = "10px";
+    		   					outerDiv.style.display = "flex";
+    		   					outerDiv.style.visibility = "visible";
+    		   				}
+    		   			}, 200);
+    		   		}
+    			}
+    			else{
+    				outerDiv.style.visibility = "visible";
+    			}
     		}
     	});
 	}
