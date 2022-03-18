@@ -135,8 +135,8 @@ class HeaderCards {
 			let badges = this.toolbar.querySelector("#headerBadges");
 			if(cards){
 					let children = [...cards.children];
-					children.forEach((card) => {
-					card.hass = this.hass;
+					children.forEach((div) => {
+					div.firstChild.hass = this.hass;
 				});
 			}
 			
@@ -200,13 +200,17 @@ class HeaderCards {
     			}
     			
 				if(cards.length > 0){
-					let div = document.createElement("div");
-					div.style.width = "auto";
-    				div.style.minWidth = "max-content";
+					//let div = document.createElement("div");
+					//div.style.width = "auto";
+    				//div.style.minWidth = "max-content";
     				cards.forEach(cardConfig => {
-    					this.addCardWhenDefined(cardConfig, div);	
+    					let div = document.createElement("div");
+						div.style.width = "auto";
+    					div.style.minWidth = "max-content";
+    					this.addCardWhenDefined(cardConfig, div);
+    					outerDiv.appendChild(div);
     				});
-    				outerDiv.appendChild(div);
+    				//outerDiv.appendChild(div);
     			}
     			
     			if(button) {
