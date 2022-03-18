@@ -74,6 +74,7 @@ header_cards:
             navigation_path: /lovelace-desktop/weather-and-temperature
 views:
 ...
+```
 
 Gives a layout like:
 
