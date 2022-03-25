@@ -241,6 +241,8 @@ class HeaderCards {
     		   				else{
     		   					mainTitle.style.flex = "0";
     		   					mainTitle.style.paddingRight = "10px";
+    		   					mainTitle.style.width = "auto";
+    							mainTitle.style.minWidth = "max-content";
     		   					outerDiv.style.display = "flex";
     		   					outerDiv.style.visibility = "visible";
     		   				}
