@@ -223,12 +223,10 @@ class HeaderCards {
     			if(tabs || mainTitle){
     				if(replaceTabs){
     					(tabs || mainTitle).style.display = "none";
-    		   			outerDiv.style.display = "flex";
+    		   			outerDiv.style.visibility = "visible";
     		   		}
     		   		else{
-    		   			//outerDiv.style.visibility = "visible";
-    		   			
-    		   		   setTimeout(function(){
+    		   			setTimeout(function(){
     		   				if(tabs){
     		   					let tabsContent = tabs.shadowRoot && tabs.shadowRoot.querySelector("#tabsContent");
     		   			    		tabsContent.style.setProperty('width', 'auto', 'important');
