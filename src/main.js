@@ -1,5 +1,8 @@
 import { dashboardObserver, toolbarObserver, panelObserver } from './observers.js';
 import { getLovelace } from './helpers.js';
+import tippy from 'tippy.js';
+import tippyStyle from 'tippy.js/dist/tippy.css';
+import tippyAnimationStyle from 'tippy.js/animations/scale-extreme.css';
 
 const CUSTOM_TYPE_PREFIX = "custom:";
 
@@ -29,10 +32,26 @@ class HeaderCards {
     	}
  	}
  	
+ 	tippyStyles() {
+    return
+      css`
+        ${unsafeCSS(tippyStyle)}
+      	${unsafeCSS(tippyAnimationStyle)}
+      `;
+  	}
+ 	
+ 	addCardsHandler(){
+ 		let lovelace = this.panel && getLovelace(this.panel);
+ 		if(lovelace){
+    		window.HeaderCards.addCardsToHeader(lovelace);
+    	}
+    	else{
+    		setTimeout(this.addCardsHandler, 100);
+    	}
+ 	}
+ 	
  	setupToolbarObserver(){
- 		this.toolbarObserver = toolbarObserver(this.header, () => {
-    		window.HeaderCards.addCardsToHeader(getLovelace(this.panel));
-    	});
+ 		this.toolbarObserver = toolbarObserver(this.header, this.addCardsHandler.bind(this));
  	}
  	
  	setupPanelObserver(){
@@ -103,7 +122,65 @@ class HeaderCards {
 		let card = this.createCardElement(cardConfig);
 		card.style.display = "inline-block";
 		card.hass = this.hass;
-		element.appendChild(card);
+		card.style["flex"] = "1";
+		let tooltipCardConfig = cardConfig.header_card_options && 
+		    cardConfig.header_card_options.tooltip_card;
+		
+		let div = document.createElement("div");
+			div.style.display = "inline-block";
+			div.style.width = "auto";
+    		div.style.minWidth = "max-content";
+    		div.style["flex-shrink"] = "1";
+    		div.style.cursor = "pointer";
+    		div.style.padding = "0px";
+    	
+		if(tooltipCardConfig){
+			let tooltipCard = this.createCardElement(tooltipCardConfig);
+			tooltipCard.style.setProperty("width","2000px", "important");
+			tooltipCard.hass = this.hass;
+			tippy(div, {
+  					content: tooltipCard,
+	 				arrow: true,
+  					animation: 'scale-extreme',
+  					placement: 'auto',
+  					appendTo: div,
+  					trigger: 'click',
+  					hideOnClick: true,
+  					maxWidth: 'none',
+  					onShow(instance) {
+    					console.log("Instance", instance);
+    					return true;	
+    				},
+    				popperOptions: {
+    					modifiers: [
+      						{
+        						name: 'flip',
+        						options: {
+          							fallbackPlacements: ['bottom', 'right'],
+        						},
+      						},
+      						{
+        						name: 'preventOverflow',
+        						options: {
+          							altAxis: true,
+          							tether: false,
+        						},
+      						},
+    					],
+  					},
+  					allowHTML: true
+				});
+				
+    			div.appendChild(card);
+				element.appendChild(div);
+				element.style["pointer-events"] = "auto";
+				div.style["pointer-events"] = "auto";
+				card.style["pointer-events"] = "none";
+				
+		}
+		else{    
+			element.appendChild(card);
+		}
 	}
 	
 	addCardWhenDefined(cardConfig, element) {
@@ -174,6 +251,10 @@ class HeaderCards {
     		
     		if(cards.length > 0 || badges.length > 0){
     			let outerDiv =  document.createElement("div");
+    			
+    			let style = document.createElement("style");
+    			style.appendChild(document.createTextNode(`.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}`));
+    			outerDiv.appendChild(style);
     			outerDiv.id = "headerCards";
     			outerDiv.style.display = "flex";
     			outerDiv.style.visibility = "hidden";
@@ -187,7 +268,7 @@ class HeaderCards {
     			
     			outerDiv.style["justify-content"] = justify_content;
     			
-    			outerDiv.style["flex"] = "1";
+    			outerDiv.style["flex"] = "1 1 90%";
     			
     			if(badges.length > 0){
     				let div = document.createElement("div");
@@ -200,16 +281,28 @@ class HeaderCards {
     			}
     			
 				if(cards.length > 0){
-					//let div = document.createElement("div");
-					//div.style.width = "auto";
-    				//div.style.minWidth = "max-content";
+					let divs = [];
+					let div = null;
     				cards.forEach(cardConfig => {
-    					let div = document.createElement("div");
-						div.style.width = "auto";
-    					div.style.minWidth = "max-content";
+    					let groupWithPrevious = cardConfig.header_card_options && 
+		    				cardConfig.header_card_options.group_with_previous === true;
+		    			
+		    			if(!groupWithPrevious){
+		    				div = document.createElement("div");
+		    				div.style.width = "auto";
+    						div.style.minWidth = "max-content";
+    						div.style["flex-shrink"] = "1";
+		    				divs.push(div);
+		    			}
+    					
     					this.addCardWhenDefined(cardConfig, div);
-    					outerDiv.appendChild(div);
+    					//outerDiv.appendChild(div);
     				});
+    				
+    				divs.forEach(thisDiv => {
+    					outerDiv.appendChild(thisDiv);
+    				});
+    				
     				//outerDiv.appendChild(div);
     			}
     			
@@ -231,8 +324,8 @@ class HeaderCards {
     		   					let tabsContent = tabs.shadowRoot && tabs.shadowRoot.querySelector("#tabsContent");
     		   			    		tabsContent.style.setProperty('width', 'auto', 'important');
     		   						let width = tabsContent.offsetWidth;
-    		   						console.log("Tabs Width", width);
-    		   						tabs.style.width = `${width}px`;
+    		   						tabs.style.width = "auto";
+    		   						tabs.style.minWidth = `${width}px`;
     		   						tabs.style.paddingRight = "10px";
     		   						outerDiv.style.visibility = "visible";
     		   				}
