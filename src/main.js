@@ -101,6 +101,7 @@ class HeaderCards {
 	addCard(cardConfig, element) {
 		let tag = cardConfig.type;
 		let card = this.createCardElement(cardConfig);
+		card.classList.add("header-card");
 		card.style.display = "inline-block";
 		card.hass = this.hass;
 		element.appendChild(card);
@@ -121,6 +122,7 @@ class HeaderCards {
 	
 	addBadge(badgeConfig, element) {
 		let badge = this.createBadgeElement(badgeConfig);
+		badge.classList.add("header-badge");
 		badge.hass = this.hass;
 		badge.style.setProperty("--ha-label-badge-size", "2em");
 		badge.style.setProperty("--ha-label-badge-title-font-size", "0.6em");
@@ -131,20 +133,12 @@ class HeaderCards {
 	
 	applyHass(){
 		if(this.hass && this.toolbar){
-			let cards = this.toolbar.querySelector("#headerCards");
-			let badges = this.toolbar.querySelector("#headerBadges");
-			if(cards){
-					let children = [...cards.children];
-					children.forEach((div) => {
-					div.firstChild.hass = this.hass;
-				});
-			}
+			let items = this.toolbar.querySelectorAll("#headerCards div .header-card,.header-badge");
 			
-			if(badges){
-					let children = [...badges.children];
-					children.forEach((badge) => {
-					badge.hass = this.hass;
-				});
+			if(items){
+				items.forEach(item => {
+						item.hass = this.hass;
+					});
 			}
 		}
 	}
