@@ -119,7 +119,7 @@ class HeaderCards {
     	}
   	}
   
-	addCard(cardConfig, element) {
+	addCard(cardConfig, element, appendTo) {
 		let tag = cardConfig.type;
 		let card = this.createCardElement(cardConfig);
 		card.classList.add("header-card");
@@ -149,16 +149,25 @@ class HeaderCards {
   					animation: 'scale-extreme',
   					placement: 'auto',
   					theme: 'homeassistant',
-  					appendTo: div,
+  					appendTo: appendTo,
   					trigger: 'click',
   					hideOnClick: true,
   					maxWidth: 'none',
+  					onShow(instance) {
+  						setTimeout(() => {
+  							instance.popperInstance.update();
+  						}, 100);
+  					},
   					onShown(instance) {
   						let thisCard = instance.reference.querySelector(".header-tooltip-card");
   						if(thisCard) thisCard.hass = that.hass;
   						let haCard = thisCard && thisCard.shadowRoot;
  			        		haCard = haCard && haCard.querySelector("ha-card");
- 						if(haCard) haCard.style.setProperty("box-shadow", "none", "important");	
+ 						if(haCard) haCard.style.setProperty("box-shadow", "none", "important");
+ 						
+ 						setTimeout(() => {
+  							instance.popperInstance.update();
+  						}, 100);
     				},
     				popperOptions: {
     					modifiers: [
@@ -191,16 +200,16 @@ class HeaderCards {
 		}
 	}
 	
-	addCardWhenDefined(cardConfig, element) {
+	addCardWhenDefined(cardConfig, element, appendTo) {
 		let tag = cardConfig.type;
 		if(tag.startsWith(CUSTOM_TYPE_PREFIX)){
     		tag = tag.substr(CUSTOM_TYPE_PREFIX.length);
     		customElements.whenDefined(tag).then(() => {
-				this.addCard(cardConfig, element);
+				this.addCard(cardConfig, element, appendTo);
 			});
     	}
   		else{
-    		this.addCard(cardConfig, element);
+    		this.addCard(cardConfig, element, appendTo);
     	}
 	}
 	
@@ -297,7 +306,7 @@ class HeaderCards {
 		    				divs.push(div);
 		    			}
     					
-    					this.addCardWhenDefined(cardConfig, div);
+    					this.addCardWhenDefined(cardConfig, div, outerDiv);
     					//outerDiv.appendChild(div);
     				});
     				

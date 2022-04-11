@@ -18,7 +18,7 @@
   "main": "webpack.config.js",
   "dependencies": {
     "chokidar": "^3.5.3",
-    "tippy.js": "^6.3.7",
+    "tippy.js": "^6.2.2",
     "watchpack": "^2.3.1"
   },
   "resolutions": {
