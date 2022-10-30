@@ -153,11 +153,22 @@ class HeaderCards {
   					trigger: 'click',
   					hideOnClick: true,
   					maxWidth: 'none',
-  					onShow(instance) {
-  						setTimeout(() => {
+  					onHide(instance) {
+    					let now = new Date();
+    					instance.lastHidden = now;
+    				},
+    				onShow(instance) {
+    					let now = new Date();
+    					if(instance.lastHidden){
+    						// Block if showing las than 0.5 seconds after hiding
+    						let ago = now.getTime() - instance.lastHidden.getTime();
+    						if(ago < 500) return false;
+    					}
+    					
+    					setTimeout(() => {
   							instance.popperInstance.update();
-  						}, 100);
-  					},
+  						}, 100);	
+    				},
   					onShown(instance) {
   						let thisCard = instance.reference.querySelector(".header-tooltip-card");
   						if(thisCard) thisCard.hass = that.hass;
