@@ -49,25 +49,25 @@ class HeaderCards {
     
     get panel(){
     	let root = this.main && this.main.shadowRoot;
-  			root = root && root.querySelector("app-drawer-layout partial-panel-resolver");
+  			root = root && root.querySelector("ha-drawer partial-panel-resolver");
   			root = root && root.shadowRoot || root;
   			root = root && root.querySelector("ha-panel-lovelace");
   		return root;
     }
     
     get header() {
-		let header = this.main && this.main.shadowRoot;
-	 		header = header && header.querySelector("ha-panel-lovelace");
+		let header = this.panel;
 	 		header = header && header.shadowRoot;
 	 		header = header && header.querySelector("hui-root");
 	 		header = header && header.shadowRoot;
-	 		header = header && header.querySelector("app-header");
+	 		header = header && header.querySelector("div.header");
 	 		
 	 		return header;
 	}
 	
 	get toolbar() {
-		return this.header && this.header.querySelector("app-toolbar");
+		toolbar = this.header && this.header.querySelector("div.toolbar");
+		return toolbar;
 	}
 	
     get hass(){
@@ -159,7 +159,7 @@ class HeaderCards {
     		
     		let tabs = this.toolbar && this.toolbar.querySelector("ha-tabs");
     		let mainTitle = this.toolbar && this.toolbar.querySelector("div[main-title]");
-    		let button = this.toolbar && this.toolbar.querySelector("ha-icon-button, ha-button-menu");
+    		let button = this.toolbar && this.toolbar.querySelector("div.action-items");
     		
     		let oldHeaderCards = this.toolbar.querySelector("#headerCards");
     		if(oldHeaderCards) oldHeaderCards.remove();	
